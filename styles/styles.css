@@ -1,0 +1,69 @@
+.todoList {
+  margin-top: 20px;
+}
+
+
+.table {}
+
+.table_header {}
+
+.table_header_row {
+  --bs-table-bg: #9e9fa1;
+  --bs-table-color: #fff;
+}
+
+.table_header_name {}
+
+.table_header_create {}
+
+.table_header_category {}
+
+.table_header_content {}
+
+.table_header_dates {}
+
+.table_header_archive {}
+
+.fa-solid {}
+
+.fa-box-archive {}
+
+.table_trash {}
+
+.fa-trash {}
+
+.table_body {}
+
+.table_body_row {}
+
+.table_body_icon_category {}
+
+.fa-cart-shopping {}
+
+.table_body_name {}
+
+.table_body_create {}
+
+.table_body_category {}
+
+.table_body_content {}
+
+.table_body_dates {}
+
+.table_body_edit {
+  cursor: pointer;
+}
+
+
+
+.fa-pen {}
+
+.table_body_archive {}
+
+.table_body_trash {}
+
+.fa-regular {}
+
+.fa-lightbulb {}
+
+.fa-shuffle {}
