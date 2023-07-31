@@ -195,17 +195,43 @@ const createNode = document.querySelector('#create_node');
   const tableContent = document.querySelector('#table_list_content');
   const nameNode = document.querySelector('#nameNode');
   const contentText = document.querySelector('#content_text');
+  // const deleteButton = document.querySelector('#button_trash')
   const time = new Date();
   const listNode = [];
 
-  function setDisable(inputId) {
-    const input = document.getElementById(inputId);
-    if (condition) {
-      
-    }
-    input.disabled = !input.disabled;
+  // function setDisable(inputId) {
+  //   const input = document.getElementById(inputId);
+  //   input.disabled = !input.disabled;
+  // }
+  // window.addEventListener("DOMContentLoaded", () => {
+  //   if (deleteButton) {
+  //   deleteButton.addEventListener('click', () => {
+  //   let newId = listNode.filter(elm => {
+  //     return !elm.isComplete
+  //   })
+  //   console.log(newId);
+  // })
+  // }
+    // 
+  // console.log(deleteButton);
+  // })
+
+  function deleteButton() {
+    let newId = listNode.filter(elm => {
+      return !elm.isComplete
+    })
+    console.log(newId);
   }
 
+ 
+
+  window.addEventListener("click", (e) => {
+  const { disabletarget } = e.target.dataset;
+  if (disabletarget) {
+    const targetInput = document.querySelectorAll(`.c${disabletarget}`);
+    targetInput.disabled = !targetInput.disabled;
+  }
+});
   function listfresher() {
     tableContent.innerHTML = '';
     renderTask();
@@ -217,24 +243,24 @@ const createNode = document.querySelector('#create_node');
       const taskHTML = `
         <tr id="${td.id}" class="table_body_row">
           <th class="table_body_icon_category" scope="row"><i class="fa-solid fa-cart-shopping"></i></th>
-          <th class="table_body_name" scope="col"><input type="text" class="isDisable" value="${td.nameNode}"></th>
+          <th class="table_body_name" scope="col"><input type="text" class="isDisable ${'c' + td.id}" value="${td.nameNode}"></th>
           <th class="table_body_create" scope="col">${td.date}</th>
           <th class="table_body_category" scope="col">
             <form action="">
-              <select name="category" class="category isDisable">
+              <select class="${'c' + td.id}"  name="category" class="category isDisable">
                 <option value="Task">Task</option>
                 <option value="Random Thought">Random Thought</option>
                 <option value="Idea">Idea</option>
               </select>
             </form>
           </th>
-          <th class="table_body_content" scope="col"><input class="content_text isDisable" type="text" value="${td.contentText}"></th>
+          <th class="table_body_content" scope="col"><input class="content_text isDisable ${'c' + td.id}" type="text" value="${td.contentText}"></th>
           <th class="table_body_dates" scope="col">
             <p class="dates"></p>
           </th>
-          <th class="table_body_edit" scope="col"><i class="fa-solid fa-pen table_body_edit" onClick="setDisable('${td.id}')"></i></th>
+          <th class="table_body_edit" scope="col"><i data-disabletarget="${td.id}" class="fa-solid fa-pen table_body_edit"></i></th>
           <th class="table_body_archive" scope="col"><i class="fa-solid fa-box-archive table_body_archive" style="color: #000000;"></i></th>
-          <th class="table_body_trash" scope="col"><i class="fa-solid fa-trash table_body_trash" data-action="delete"></i></th>
+          <th class="table_body_trash" scope="col"><button id="button_trash" onClick="deleteButton()"><i class="fa-solid fa-trash" data-action="delete"></i></button></th>
         </tr>
       `;
       tableContent.insertAdjacentHTML('beforeend', taskHTML);
@@ -255,8 +281,11 @@ const createNode = document.querySelector('#create_node');
       date: time.toDateString(),
       contentText: contentText.value,
       isDisable: true,
+      isComplete: false
     };
 
     listNode.push(newTask);
     listfresher();
   });
+  
+   
