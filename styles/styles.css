@@ -44,7 +44,9 @@
 
 .table_body_create {}
 
-.table_body_category {}
+.table_body_category {
+  text-transform: capitalize;
+}
 
 .table_body_content {}
 
