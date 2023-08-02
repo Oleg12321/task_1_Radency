@@ -1,11 +1,13 @@
 const createNode = document.querySelector('#form');
   const tableContent = document.querySelector('#table_list_content');
+  const staticBackdrop = new bootstrap.Modal(document.querySelector('#staticBackdrop'))
   const editModal = new bootstrap.Modal(document.querySelector('#editModal'))
   const editForm = document.querySelector('#editForm')
   const numberBody = document.querySelector('.table_body_numbers')
   const footArchived = document.querySelector('#table_list_archived')
   const btnArchived = document.querySelector('.button_header_archived')
   const btnCreateNode = document.querySelector('#btn_create_node')
+  
 
 
 
@@ -54,7 +56,7 @@ editForm.addEventListener('submit', (event) => {
   document.querySelector(`#task_${editTaskId} .table_body_category`).textContent = editCategory
   document.querySelector(`#task_${editTaskId} .table_body_content`).textContent = editContentText
 
-  editModal.close()
+  editModal.hide()
   editTaskId = null
 })
 
@@ -62,11 +64,11 @@ tableContent.addEventListener('click', (e) => {
   
   const { edit } = e.target.dataset;
   if (edit) {
+  
     const task = listNode.find((task) => task.id === edit);   
     editForm.elements.nameNode.value = task.nameNode;
     editForm.elements.category.value = task.category;
     editForm.elements.contentText.value = task.contentText;
-
     
   }
 });
@@ -81,6 +83,7 @@ createNode.addEventListener('submit', (event) => {
     const contentText = event.target.elements.contentText.value
     
   renderTask(nameNode, category, contentText)
+  staticBackdrop.hide()
 });
 
   function renderTask(nameNode, category, contentText) {
