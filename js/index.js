@@ -6,6 +6,9 @@ const createNode = document.querySelector('#form');
   const footArchived = document.querySelector('#table_list_archived')
   const btnArchived = document.querySelector('.button_header_archived')
   const btnCreateNode = document.querySelector('#btn_create_node')
+
+
+
   let time = new Date();
   let listNode = [];
   let listArchived = []
@@ -40,14 +43,24 @@ const createNode = document.querySelector('#form');
   }
 });
 
+editForm.addEventListener('submit', (event) => {
+  event.preventDefault()
+     
+    const editNameNode = event.target.elements.editNameNode.value;
+    const editCategory = event.target.elements.editCategory.value;
+    const editContentText = event.target.elements.editContentText.value
+    
+    renderTask(editNameNode, editCategory, editContentText)
+})
+
 tableContent.addEventListener('click', (e) => {
-  e.preventDefault()
+  
   const { edit } = e.target.dataset;
   if (edit) {
     const task = listNode.find((task) => task.id === edit);   
-    editForm.elements.nameNode.value = task.nameNode;
-    editForm.elements.category.value = task.category;
-    editForm.elements.contentText.value = task.contentText;
+    editForm.elements.editNameNode.value = task.nameNode;
+    editForm.elements.editCategory.value = task.category;
+    editForm.elements.editContentText.value = task.contentText;
 
   }
 });

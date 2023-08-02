@@ -95,7 +95,7 @@
         </tfoot>
       </table>
       
-      <button id="btn_create_node" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Create Note</button>
+      <button id="btn_create_node" type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Create Note</button>
 
 
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -148,18 +148,18 @@
                 <tbody class="table_body">
                   <tr class="table_body_row">
                     <th class="table_body_icon_category" scope="row"><i class="fa-solid fa-cart-shopping"></i></th>
-                    <th class="table_body_name" scope="col"><input id="nameNode" type="text" name="nameNode"></th>
+                    <th class="table_body_name" scope="col"><input id="edit_nameNode" type="text" name="editNameNode"></th>
                     <th class="table_body_create" scope="col">Created</th>
                     <th class="table_body_category" scope="col">
     
-                      <select id="category" name="category" class="category">
+                      <select id="edit_category" name="editCategory" class="category">
                         <option value="task">Task</option>
                         <option value="random thought">Random Thought</option>
                         <option value="idea">Idea</option>
                       </select>
     
                     </th>
-                    <th class="table_body_content" scope="col"><input name="contentText" id="content_text" type="text"></th>
+                    <th class="table_body_content" scope="col"><input name="editContentText" id="edit_content_text" type="text"></th>
                     <th class="table_body_dates" scope="col">
                       <p class="dates"></p>
                     </th>
