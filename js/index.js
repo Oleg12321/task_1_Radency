@@ -45,12 +45,17 @@ const createNode = document.querySelector('#form');
 
 editForm.addEventListener('submit', (event) => {
   event.preventDefault()
-     
-    const editNameNode = event.target.elements.editNameNode.value;
-    const editCategory = event.target.elements.editCategory.value;
-    const editContentText = event.target.elements.editContentText.value
     
-    renderTask(editNameNode, editCategory, editContentText)
+  const editNameNode = event.target.elements.nameNode.value;
+  const editCategory = event.target.elements.category.value;
+  const editContentText = event.target.elements.contentText.value
+    
+  document.querySelector(`#task_${editTaskId} .table_body_name`).textContent = editNameNode
+  document.querySelector(`#task_${editTaskId} .table_body_category`).textContent = editCategory
+  document.querySelector(`#task_${editTaskId} .table_body_content`).textContent = editContentText
+
+  editModal.close()
+  editTaskId = null
 })
 
 tableContent.addEventListener('click', (e) => {
@@ -58,10 +63,11 @@ tableContent.addEventListener('click', (e) => {
   const { edit } = e.target.dataset;
   if (edit) {
     const task = listNode.find((task) => task.id === edit);   
-    editForm.elements.editNameNode.value = task.nameNode;
-    editForm.elements.editCategory.value = task.category;
-    editForm.elements.editContentText.value = task.contentText;
+    editForm.elements.nameNode.value = task.nameNode;
+    editForm.elements.category.value = task.category;
+    editForm.elements.contentText.value = task.contentText;
 
+    
   }
 });
 
@@ -85,7 +91,8 @@ createNode.addEventListener('submit', (event) => {
     date: time.toDateString(),
     contentText,
     datesFromText: contentText.match(/\d{2}([\/.-])\d{2}\1\d{4}/g) || '',
-    isDisable: true
+    isDisable: true,
+    isArchived: false
   };
   listNode.push(newTask);
   
@@ -166,10 +173,9 @@ btnArchived.addEventListener('click', () => {
     if (archived) {
       const parenNode = e.target.closest('.table_body_row')
       let task = listNode.find((task) => task.id === archived);
-      let id = +(parenNode.id)
       let taskNum = listNode.splice(task, 1);
       listArchived.push(taskNum)
-      listNode = listNode.filter( task => task.id !== id)
+      listNode = listNode.filter( task => !task.isArchived)
       parenNode.remove()
       archivedTask()
       listfresher()
@@ -187,10 +193,9 @@ btnArchived.addEventListener('click', () => {
     if (archived) {
       const parenNode = e.target.closest('.table_body_row')
       let task = listArchived.find((task) => task.id === archived);
-      let id = +(parenNode.id)
       let taskNum = listArchived.splice(task, 1);
       listNode.push(taskNum)
-      listArchived = listArchived.filter( task => task.id !== id)
+      listArchived = listArchived.filter( task => task.isArchived)
       parenNode.remove()
       renderTask()
       listfresher()
