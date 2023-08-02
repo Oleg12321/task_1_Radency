@@ -21,7 +21,7 @@
             <th class="table_header_content" scope="col">Content</th>
             <th class="table_header_dates" scope="col">Dates</th>
             <th></th>
-            <th class="table_header_archive" scope="col"><i class="fa-solid fa-box-archive" style="color: #fff;"></i></th>
+            <th class="table_header_archive" scope="col"><button class="button_header_archived" type="submit"><i class="fa-solid fa-box-archive" style="color: #fff;"></i></button></th>
             <th class="table_trash" scope="col"><i class="fa-solid fa-trash"></i></th>
           </tr>
         </thead>
@@ -90,9 +90,12 @@
             <th class="table_body_trash" scope="col"><i class="fa-solid fa-trash table_body_trash" data-action="delete"></i></th>
           </tr> -->
         </tbody>
+        <tfoot id="table_list_archived" class="table_archived active">
+
+        </tfoot>
       </table>
       
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Create Note</button>
+      <button id="btn_create_node" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Create Note</button>
 
 
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -173,16 +176,31 @@
         </div>
       </div>
     </div>
-
     </div>
+  </div>
+
+  <div class="container">
+    <table class="todoList_table_number table">
+      <thead class="th_number">
+        <tr class="th_row_number table-secondary">
+          <th></th>
+          <th class="th__number_node" scope="col">Note Category</th>
+          <th class="th_active" scope="col">Active</th>
+          <th class="th_frhived" scope="col">Archived</th>
+        </tr>
+      </thead>
+      <tbody id="table_list_numbers" class="table_body_numbers">
+    
+      </tbody>
+    </table>
   </div>
     
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
   <script src="https://kit.fontawesome.com/bd771d497c.js" crossorigin="anonymous"></script>
-  
   <script src="./js/index.js"></script>
+  <script src="./js/numberOfNotes.js"></script>
 </body>
 </html>
 
