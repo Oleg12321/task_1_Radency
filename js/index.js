@@ -55,6 +55,7 @@ editForm.addEventListener('submit', (event) => {
   document.querySelector(`#task_${editTaskId} .table_body_name`).textContent = editNameNode
   document.querySelector(`#task_${editTaskId} .table_body_category`).textContent = editCategory
   document.querySelector(`#task_${editTaskId} .table_body_content`).textContent = editContentText
+  document.querySelector(`#task_${editTaskId} .dates`).textContent = editContentText.match(/\d{2}([\/.-])\d{2}\1\d{4}/g) || ''
 
   editModal.hide()
   editTaskId = null
@@ -64,11 +65,11 @@ tableContent.addEventListener('click', (e) => {
   
   const { edit } = e.target.dataset;
   if (edit) {
-  
     const task = listNode.find((task) => task.id === edit);   
     editForm.elements.nameNode.value = task.nameNode;
     editForm.elements.category.value = task.category;
     editForm.elements.contentText.value = task.contentText;
+
     
   }
 });
@@ -132,7 +133,6 @@ function archivedTask() {
     
       const i = listArchived[key];
       i.forEach((td) => {
-        console.log(td);
         const newItem = document.createElement('tr');
       newItem.classList.add('table_body_row')
       newItem.id = `task_${td.id}`;
@@ -176,6 +176,7 @@ btnArchived.addEventListener('click', () => {
     if (archived) {
       const parenNode = e.target.closest('.table_body_row')
       let task = listNode.find((task) => task.id === archived);
+      console.log(task);
       let taskNum = listNode.splice(task, 1);
       listArchived.push(taskNum)
       listNode = listNode.filter( task => !task.isArchived)
@@ -196,6 +197,7 @@ btnArchived.addEventListener('click', () => {
     if (archived) {
       const parenNode = e.target.closest('.table_body_row')
       let task = listArchived.find((task) => task.id === archived);
+      console.log(task);
       let taskNum = listArchived.splice(task, 1);
       listNode.push(taskNum)
       listArchived = listArchived.filter( task => task.isArchived)
