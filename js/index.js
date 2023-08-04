@@ -94,7 +94,7 @@ createNode.addEventListener('submit', (event) => {
     category,
     date: time.toDateString(),
     contentText,
-    datesFromText: contentText.match(/\d{2}([\/.-])\d{2}\1\d{4}/g) || '',
+    datesFromText: '2',
     isDisable: true,
     isArchived: false
   };
@@ -116,7 +116,7 @@ createNode.addEventListener('submit', (event) => {
             <p class="dates">${newTask.datesFromText}</p>
           </th>
           <th class="table_body_edit" scope="col"><i data-edit="${newTask.id}" class="fa-solid fa-pen table_body_edit"></i></th>
-          <th class="table_body_archive" scope="col"><button type="submit" data-archived="${newTask.id}" data-action="archived" id="button_archived"><i class="fa-solid fa-box-archive table_body_archive" style="color: #000000;"></i></button></th>
+          <th class="table_body_archive" scope="col"><button type="submit" data-archived="${newTask.id}"><i class="fa-solid fa-box-archive data-archived="${newTask.id} table_body_archive" style="color: #000000;"></i></button></th>
           <th class="table_body_trash" scope="col"><button type="submit" data-action="delete" id="button_trash"><i class="fa-solid fa-trash" data-action="delete"></i></button></th>
         </tr>
   `;
@@ -129,10 +129,8 @@ createNode.addEventListener('submit', (event) => {
 function archivedTask() {
 
   
-  for (const key in listArchived) {
+  for (const td of listArchived) {
     
-      const i = listArchived[key];
-      i.forEach((td) => {
         const newItem = document.createElement('tr');
       newItem.classList.add('table_body_row')
       newItem.id = `task_${td.id}`;
@@ -148,14 +146,13 @@ function archivedTask() {
                 <p class="dates">${td.datesFromText}</p>
               </th>
               <th class="table_body_edit" scope="col"><i data-edit="${td.id}" class="fa-solid fa-pen table_body_edit"></i></th>
-              <th class="table_body_archive" scope="col"><button type="submit" data-archived="${td.id}" id="button_archived"><i class="fa-solid fa-box-archive table_body_archive" style="color: #000000;"></i></button></th>
+              <th class="table_body_archive" scope="col"><button type="submit" data-archived="${td.id}"><i class="fa-solid fa-box-archive table_body_archive" style="color: #000000;"></i></button></th>
               
             </tr>
         `;
 
       footArchived.append(newItem);
-      })
-      
+
   } 
 }
     
@@ -176,13 +173,12 @@ btnArchived.addEventListener('click', () => {
     if (archived) {
       const parenNode = e.target.closest('.table_body_row')
       let task = listNode.find((task) => task.id === archived);
-      console.log(task);
       let taskNum = listNode.splice(task, 1);
-      listArchived.push(taskNum)
+      listArchived.push(...taskNum)
+      console.log(listArchived);
       listNode = listNode.filter( task => !task.isArchived)
       parenNode.remove()
       archivedTask()
-      listfresher()
     }
   });
 
@@ -197,13 +193,13 @@ btnArchived.addEventListener('click', () => {
     if (archived) {
       const parenNode = e.target.closest('.table_body_row')
       let task = listArchived.find((task) => task.id === archived);
-      console.log(task);
       let taskNum = listArchived.splice(task, 1);
-      listNode.push(taskNum)
+      listNode.push(...taskNum)
       listArchived = listArchived.filter( task => task.isArchived)
       parenNode.remove()
+      console.log(listNode);
       renderTask()
-      listfresher()
+      // listfresher()
     }
   });
 
