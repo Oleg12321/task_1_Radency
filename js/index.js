@@ -37,8 +37,8 @@ const createNode = document.querySelector('#form');
 }
 
 
-  window.addEventListener("click", (e) => {
-  const { edit } = e.target.dataset;
+  window.addEventListener("click", (event) => {
+  const { edit } = event.target.dataset;
   if (edit) {
     editModal.show()
     editTaskId = edit
