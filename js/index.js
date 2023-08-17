@@ -1,260 +1,217 @@
-const createNode = document.querySelector('#form');
-  const tableContent = document.querySelector('#table_list_content');
-  const staticBackdrop = new bootstrap.Modal(document.querySelector('#staticBackdrop'))
-  const editModal = new bootstrap.Modal(document.querySelector('#editModal'))
-  const editForm = document.querySelector('#editForm')
-  const numberBody = document.querySelector('.table_body_numbers')
-  const footArchived = document.querySelector('#table_list_archived')
-  const btnArchived = document.querySelector('.button_header_archived')
-  const btnCreateNode = document.querySelector('#btn_create_node')
-  
+const refs = {
+  tasksList: document.querySelector('#tasksList'),
+  title: document.querySelector('#title'),
+  modals: {
+    create: new bootstrap.Modal(document.querySelector('#staticBackdrop')),
+    edit: new bootstrap.Modal(document.querySelector('#editTaskModal')),
+    remove: document.querySelector('#removeTaskModal'),
+  },
+  forms: {
+    create: document.querySelector('#createTaskForm'),
+    edit: document.querySelector('#editTaskForm'),
+    remove: document.querySelector('#removeTaskForm'),
+  },
+};
 
+let time = new Date();
 
+let tasksData = [];
 
-  let time = new Date();
-  let listNode = [];
-  let listArchived = []
+let idCounter = 0;
+const getNewId = () => (++idCounter).toString();
 
-  let icons = {
+ let icons = {
         task: `<i class="fa-solid fa-cart-shopping"></i>`,
         'random thought': `<i class="fa-solid fa-shuffle"></i>`,
         idea: `<i class="fa-regular fa-lightbulb"></i>`,
       }
-// content
 
-  let editTaskId = null
+let activeModalRef = null;
+let taskToEdit = null;
+let taskToRemove = null;
+let isArchiveOpen = false;
+
+function createTaskHTML(task) {
+  const taskClasses = [];
+  if (task.isArchived) {
+    taskClasses.push('is-archived');
+  }
 
 
-  tableContent.addEventListener('click', deleteTask)
+  return `
+      <tr id="task_${task.id}" class="table_body_row ${taskClasses.join(' ')}">
+        <th class="table_body_icon_category icon_element" scope="row">${icons[task.category]}</th>
+          <th class="table_body_name" scope="col">${task.nameNode}</th>
+          <th class="table_body_create" scope="col">${task.date}</th>
+          <th class="table_body_category" scope="col">
+              ${task.category}
+          </th>
+          <th class="table_body_content" scope="col">${task.contentText}</th>
+          <th class="table_body_dates" scope="col">
+            <p class="dates">${task.datesFromText}</p>
+          </th>
+          <th class="table_body_edit" scope="col">
+            <i data-editid="${task.id}" class="fa-solid fa-pen table_body_edit"></i>
+          </th>
+          <th class="table_body_archive" scope="col">
+            <button type="submit" data-archiveid="${task.id}">
+              <i class="fa-solid fa-box-archive data-archiveid="${task.id}" style="color: #000000;"></i>
+            </button>
+          </th>
+          <th class="table_body_trash" scope="col">
+            <button type="submit" data-removeid="delete" id="button_trash">
+              <i class="fa-solid fa-trash" data-removeid="delete"></i>
+            </button>
+          </th>
+      </tr>       
+  `;
+}
 
-  function deleteTask(event) {
-    if (event.target.dataset.action !== 'delete'
+function getTaskRefById(id) {
+  return document.querySelector(`#task_${id}`);
+}
+
+function createTask(nameNode, contentText, category) {
+  const newTask = {
+    id: getNewId(),
+    nameNode,
+    date: time.toDateString(),
+    category,
+    contentText,
+    datesFromText: contentText.match(/\d{2}([\/.-])\d{2}\1\d{4}/g) || '',
+    isArchived: false,
+  };
+  tasksData.push(newTask);
+  console.log(tasksData);
+  // Don't render new task if archive is open
+  if (!isArchiveOpen) {
+    refs.tasksList.insertAdjacentHTML('beforeend', createTaskHTML(newTask));
+  }
+
+  refs.modals.create.hide()
+}
+
+refs.forms.create.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const nameNode = e.target.elements.nameNode.value;
+  const category = e.target.elements.category.value;
+  const contentText = e.target.elements.contentText.value;
+  
+
+  createTask(nameNode, contentText, category);
+  e.target.elements.nameNode.value = ''
+  e.target.elements.category.value = 'task'
+  e.target.elements.contentText.value = '' 
+});
+
+
+refs.tasksList.addEventListener('click', (event) => {
+  
+  if (event.target.dataset.removeid !== 'delete'
+    ) return
+  
+  const parenNode = event.target.closest('.table_body_row')
+  const id = (parenNode.id)
+
+  
+  tasksData = tasksData.filter( (task) => `task_${task.id}` !== id)
+  parenNode.remove()
+})
+
+
+function deleteTask(event) {
+    if (event.target.dataset.removeid !== 'delete'
     ) return
     const parenNode = event.target.closest('.table_body_row')
     const id = +(parenNode.id)
-    listNode = listNode.filter( task => task.id !== id)
+    listNode = listNode.filter( task => `task_${task.id}` !== id)
     parenNode.remove()
 }
 
-
-  window.addEventListener("click", (event) => {
-  const { edit } = event.target.dataset;
-  if (edit) {
-    editModal.show()
-    editTaskId = edit
-  }
-});
-
-editForm.addEventListener('submit', (event) => {
-  event.preventDefault()
-    
-  const editNameNode = event.target.elements.nameNode.value;
-  const editCategory = event.target.elements.category.value;
-  const editContentText = event.target.elements.contentText.value
-    
-  document.querySelector(`#task_${editTaskId} .table_body_name`).textContent = editNameNode
-  document.querySelector(`#task_${editTaskId} .table_body_category`).textContent = editCategory
-  document.querySelector(`#task_${editTaskId} .table_body_content`).textContent = editContentText
-  document.querySelector(`#task_${editTaskId} .dates`).textContent = editContentText.match(/\d{2}([\/.-])\d{2}\1\d{4}/g) || ''
-
-  editModal.hide()
-  editTaskId = null
-})
-
-tableContent.addEventListener('click', (e) => {
-  
-  const { edit } = e.target.dataset;
-  if (edit) {
-    const task = listNode.find((task) => task.id === edit);   
-    editForm.elements.nameNode.value = task.nameNode;
-    editForm.elements.category.value = task.category;
-    editForm.elements.contentText.value = task.contentText;
-
-    
-  }
-});
-
-
-
-createNode.addEventListener('submit', (event) => {
-    event.preventDefault();
-
-    const nameNode = event.target.elements.nameNode.value;
-    const category = event.target.elements.category.value;
-    const contentText = event.target.elements.contentText.value
-    
-  renderTask(nameNode, category, contentText)
-  staticBackdrop.hide()
-});
-
-  function renderTask(nameNode, category, contentText) {
-  const newTask = {
-    id: Date.now().toString(),
-    nameNode,
-    category,
-    date: time.toDateString(),
-    contentText,
-    datesFromText: '2',
-    isDisable: true,
-    isArchived: false
-  };
-  listNode.push(newTask);
-  
-  const newItem = document.createElement('tr');
-  newItem.classList.add('table_body_row')
-  newItem.id = `task_${newTask.id}`;
-
-  newItem.innerHTML = `
-    <th class="table_body_icon_category icon_element" scope="row">${icons[newTask.category]}</th>
-          <th class="table_body_name" scope="col">${newTask.nameNode}</th>
-          <th class="table_body_create" scope="col">${newTask.date}</th>
-          <th class="table_body_category" scope="col">
-              ${newTask.category}
-          </th>
-          <th class="table_body_content" scope="col">${newTask.contentText}</th>
-          <th class="table_body_dates" scope="col">
-            <p class="dates">${newTask.datesFromText}</p>
-          </th>
-          <th class="table_body_edit" scope="col"><i data-edit="${newTask.id}" class="fa-solid fa-pen table_body_edit"></i></th>
-          <th class="table_body_archive" scope="col"><button type="submit" data-archived="${newTask.id}"><i class="fa-solid fa-box-archive data-archived="${newTask.id} table_body_archive" style="color: #000000;"></i></button></th>
-          <th class="table_body_trash" scope="col"><button type="submit" data-action="delete" id="button_trash"><i class="fa-solid fa-trash" data-action="delete"></i></button></th>
-        </tr>
-  `;
-
-  tableContent.append(newItem);
-}
-
-
-//  archived
-function archivedTask() {
-
-  
-  for (const td of listArchived) {
-    
-        const newItem = document.createElement('tr');
-      newItem.classList.add('table_body_row')
-      newItem.id = `task_${td.id}`;
-      newItem.innerHTML = `
-        <th class="table_body_icon_category icon_element" scope="row">${icons[td.category]}</th>
-              <th class="table_body_name" scope="col">${td.nameNode}</th>
-              <th class="table_body_create" scope="col">${td.date}</th>
-              <th class="table_body_category" scope="col">
-                  ${td.category}
-              </th>
-              <th class="table_body_content" scope="col">${td.contentText}</th>
-              <th class="table_body_dates" scope="col">
-                <p class="dates">${td.datesFromText}</p>
-              </th>
-              <th class="table_body_edit" scope="col"><i data-edit="${td.id}" class="fa-solid fa-pen table_body_edit"></i></th>
-              <th class="table_body_archive" scope="col"><button type="submit" data-archived="${td.id}"><i class="fa-solid fa-box-archive table_body_archive" style="color: #000000;"></i></button></th>
-              
-            </tr>
-        `;
-
-      footArchived.append(newItem);
-
-  } 
-}
-    
-    
-  
-
-
-btnArchived.addEventListener('click', () => {
-  tableContent.classList.toggle('active')
-  footArchived.classList.toggle('active')
-  btnCreateNode.classList.toggle('active')
-})
-
-
-  tableContent.addEventListener('click', (e) => {
-    e.preventDefault()
-    const { archived } = e.target.dataset;
-    if (archived) {
-      const parenNode = e.target.closest('.table_body_row')
-      let task = listNode.find((task) => task.id === archived);
-      let taskNum = listNode.splice(task, 1);
-      listArchived.push(...taskNum)
-      console.log(listArchived);
-      listNode = listNode.filter( task => !task.isArchived)
-      parenNode.remove()
-      archivedTask()
+function renderTasks() {
+  refs.tasksList.innerHTML = '';
+  tasksData.forEach((task) => {
+    if (task.isArchived === isArchiveOpen) {
+      refs.tasksList.insertAdjacentHTML('beforeend', createTaskHTML(task));
     }
   });
-
-  function listfresher() {
-    footArchived.innerHTML= ``
-    archivedTask()
-  }
- 
-  footArchived.addEventListener('click', (e) => {
-    e.preventDefault()
-    const { archived } = e.target.dataset;
-    if (archived) {
-      const parenNode = e.target.closest('.table_body_row')
-      let task = listArchived.find((task) => task.id === archived);
-      let taskNum = listArchived.splice(task, 1);
-      listNode.push(...taskNum)
-      listArchived = listArchived.filter( task => task.isArchived)
-      parenNode.remove()
-      console.log(listNode);
-      renderTask()
-      // listfresher()
-    }
-  });
-
-
-
-
-
-
-//  number of nodes 
-  let listOfNumbers = [{
-      id: Date.now().toString(),
-      categoryImg: icons.task,
-      category: 'Task',
-      active: listNode.length,
-      archived: 2
-    },
-    {
-      id: Date.now().toString(),
-      categoryImg: icons['random thought'],
-      category: 'Random Thought',
-      active: listNode.length,
-      archived: 2
-    },
-    {
-      id: Date.now().toString(),
-      categoryImg: icons.idea,
-      category: 'Idea',
-      active: listNode.length,
-      archived: 2
-    }
-  ]
-
-
-  function renderNumbers() {
-  for (const td of listOfNumbers) {
-    const newItem = document.createElement('tr');
-  newItem.classList.add('table_body_row_number')
-  newItem.id = `task_${td.id}`;
-  newItem.innerHTML = `
-    <th class="table_body_icon_category icon_element" scope="row">${td.categoryImg}</th>
-          <th class="table_body_category" scope="col">${td.category}</th>
-          <th class="table_body_content" scope="col">${td.active}</th>
-          <th class="table_body_dates" scope="col">
-            <p class="dates">${td.archived}</p>
-          </th>
-    </tr>
-  `;
-
-  numberBody.append(newItem);
-  }
-  
 }
 
-renderNumbers()
+window.addEventListener('click', (e) => {
+  // Close modal on cross btn or modal background click
+  if (
+    e.target.classList.contains('modal-close') ||
+    e.target.classList.contains('modal-background') ||
+    e.target.classList.contains('modal-close-btn')
+  ) {
+    closeModal();
+  }
 
+  const { editid, archiveid } = e.target.dataset;
+  // Populate edit form and open edit modal
+  if (editid) {
+    const task = tasksData.find((task) => task.id === editid);
 
-  
-   
+    refs.forms.edit.elements.nameNode.value = task.nameNode;
+    refs.forms.edit.elements.category.value = task.category;
+    refs.forms.edit.elements.contentText.value = task.contentText;
+
+    taskToEdit = task;
+
+    refs.modals.edit.show()
+  }
+
+  if (archiveid) {
+    const task = tasksData.find((task) => task.id === archiveid);
+console.log(task);
+    task.isArchived = !task.isArchived;
+    const taskRef = getTaskRefById(task.id);
+    console.log(taskRef);
+    taskRef.remove();
+  }
+
+  // Toggle archive display
+  if (e.target.id === 'toggleArchive') {
+    isArchiveOpen = !isArchiveOpen;
+    e.target.textContent = isArchiveOpen ? '' : ''
+    renderTasks();
+  }
+
+})
+
+refs.forms.edit.addEventListener('submit', e => {
+  e.preventDefault()
+
+  const editNameNode = e.target.elements.nameNode.value;
+  const editCategory = e.target.elements.category.value;
+  const editContentText = e.target.elements.contentText.value;
+  const datesFromText = editContentText.match(/\d{2}([\/.-])\d{2}\1\d{4}/g) || '';
+
+  updateTask(editNameNode, editCategory, editContentText, datesFromText);
+  e.target.elements.nameNode.value = ''
+  e.target.elements.category.value = 'task'
+  e.target.elements.contentText.value = '' 
+})
+
+function updateTask(nameNode, category, contentText, datesFromText) {
+  // Update task object
+  taskToEdit.nameNode = nameNode;
+  taskToEdit.category = category;
+  taskToEdit.contentText = contentText;
+
+  // Find task card
+  const taskRef = getTaskRefById(taskToEdit.id);
+
+  // Update card html
+  taskRef.querySelector('.icon_element').innerHTML = icons[category];
+  taskRef.querySelector('.table_body_name').textContent = nameNode;
+  taskRef.querySelector('.table_body_category').category = category;
+  taskRef.querySelector('.table_body_content').textContent = contentText;
+  taskRef.querySelector('.dates').textContent = datesFromText;
+
+  // Reset variable and close modal
+  taskToEdit = null;
+  refs.modals.edit.hide()
+}
+

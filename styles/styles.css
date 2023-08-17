@@ -11,13 +11,12 @@
   text-transform: capitalize;
 }
 
-.button_header_archived{
+.button_header_archived {
   background-color: #9e9fa1;
   color: #fff;
   border: 0px;
 }
 
-.active{
+.active {
   display: none;
 }
-

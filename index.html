@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <link rel="stylesheet" href="./styles/styles.css">
+  <link rel="stylesheet" href="./styles/styles.css">
   <title>Document</title>
 </head>
+
 <body>
   <div class="todoList">
     <div class="container">
@@ -21,101 +23,174 @@
             <th class="table_header_content" scope="col">Content</th>
             <th class="table_header_dates" scope="col">Dates</th>
             <th></th>
-            <th class="table_header_archive" scope="col"><button class="button_header_archived" type="submit"><i class="fa-solid fa-box-archive" style="color: #fff;"></i></button></th>
+            <th class="table_header_archive" scope="col">
+              <button id="toggleArchive" class="button_header_archived" type="submit">
+                <i class="fa-solid fa-box-archive" id="toggleArchive" style="color: #fff;"></i>
+              </button>
+            </th>
             <th class="table_trash" scope="col"><i class="fa-solid fa-trash"></i></th>
           </tr>
         </thead>
-        <tbody id="table_list_content" class="table_body"></tbody>
-        <tfoot id="table_list_archived" class="table_archived active"></tfoot>
+        <tbody id="tasksList" class="tasks-list">
+          <!-- <tr class="table_body_row">
+            <th class="table_body_icon_category" scope="row"><i class="fa-solid fa-cart-shopping"></i></th>
+            <th class="table_body_name" scope="col">Name</th>
+            <th class="table_body_create" scope="col">Created</th>
+            <th class="table_body_category" scope="col">Category</th>
+            <th class="table_body_content" scope="col">Content</th>
+            <th class="table_body_dates" scope="col">
+              <p class="dates"></p>
+            </th>
+            <th class="table_body_edit" scope="col"><i class="fa-solid fa-pen"></i></th>
+            <th class="table_body_archive" scope="col"><i class="fa-solid fa-box-archive" style="color: #000000;"></i></th>
+            <th class="table_body_trash" scope="col"><i class="fa-solid fa-trash"></i></th>
+          </tr>
+          <tr class="table_body_row">
+            <th class="table_body_icon_category" scope="row"><i class="fa-regular fa-lightbulb"></i></th>
+            <th class="table_body_name" scope="col">Name</th>
+            <th class="table_body_create" scope="col">Created</th>
+            <th class="table_body_category" scope="col">Category</th>
+            <th class="table_body_content" scope="col">Content</th>
+            <th class="table_body_dates" scope="col">
+              <p class="dates"></p>
+            </th>
+            <th class="table_body_edit" scope="col"><i class="fa-solid fa-pen"></i></th>
+            <th class="table_body_archive" scope="col"><i class="fa-solid fa-box-archive" style="color: #000000;"></i></th>
+            <th class="table_body_trash" scope="col"><i class="fa-solid fa-trash"></i></th>
+          </tr>
+          <tr class="table_body_row">
+            <th class="table_body_icon_category" scope="row"><i class="fa-solid fa-shuffle"></i></th>
+            <th class="table_body_name" scope="col">Name</th>
+            <th class="table_body_create" scope="col">Created</th>
+            <th class="table_body_category" scope="col">Category</th>
+            <th class="table_body_content" scope="col">Content</th>
+            <th class="table_body_dates" scope="col">
+              <p class="dates"></p>
+            </th>
+            <th class="table_body_edit" scope="col"><i class="fa-solid fa-pen"></i></th>
+            <th class="table_body_archive" scope="col"><i class="fa-solid fa-box-archive" style="color: #000000;"></i></th>
+            <th class="table_body_trash" scope="col"><i class="fa-solid fa-trash"></i></th>
+          </tr>
+
+
+
+          <tr class="table_body_row">
+            <th class="table_body_icon_category" scope="row"><i class="fa-solid fa-cart-shopping"></i></th>
+            <th class="table_body_name" scope="col"><input type="text"></th>
+            <th class="table_body_create" scope="col">Created</th>
+            <th class="table_body_category" scope="col">
+              <form action="">
+                <select name="category" id="category" >
+                  <option value="Task">Task</option>
+                  <option value="Random Thought">Random Thought</option>
+                  <option value="Idea">Idea</option>
+                </select>
+              </form>
+            </th>
+            <th class="table_body_content" scope="col"><input class="content_text" type="text"></th>
+            <th class="table_body_dates" scope="col">
+              <p class="dates"></p>
+            </th>
+            <th class="table_body_edit" scope="col"><i class="fa-solid fa-pen table_body_edit" onClick="setDisable()"></i></th>
+            <th class="table_body_archive" scope="col"><i class="fa-solid fa-box-archive table_body_archive" style="color: #000000;"></i></th>
+            <th class="table_body_trash" scope="col"><i class="fa-solid fa-trash table_body_trash" data-action="delete"></i></th>
+          </tr> -->
+        </tbody>
+        <tfoot id="table_list_archived" class="table_archived active">
+
+        </tfoot>
       </table>
-      
-      <button id="btn_create_node" type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Create Note</button>
+
+      <button id="btn_create_node" type="submit" class="btn btn-primary" data-bs-toggle="modal"
+        data-bs-target="#staticBackdrop">Create Note</button>
 
 
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-      aria-labelledby="staticBackdropLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-          <div class="modal-body">
-            <form id="form" class="modal-footer">
-            <table class="todoList_table table">
-              <tbody class="table_body">
-                <tr class="table_body_row">
-                  <th class="table_body_icon_category" scope="row"><i class="fa-solid fa-cart-shopping"></i></th>
-                  <th class="table_body_name" scope="col"><input id="nameNode" type="text"></th>
-                  <th class="table_body_create" scope="col">Created</th>
-                  <th class="table_body_category" scope="col">
-                    
-                      <select id="category" name="category" class="category">
-                        <option value="task">Task</option>
-                        <option value="random thought">Random Thought</option>
-                        <option value="idea">Idea</option>
-                      </select>
-                    
-                  </th>
-                  <th class="table_body_content" scope="col"><input name="contentText" id="content_text" type="text"></th>
-                  <th class="table_body_dates" scope="col">
-                    <p class="dates"></p>
-                  </th>
-                </tr>
-              </tbody>
-            </table>
+      <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+            <div class="modal-body">
+              <form id="createTaskForm" class="modal-footer">
+                <table class="todoList_table table">
+                  <tbody class="table_body">
+                    <tr class="table_body_row">
+                      <th class="table_body_icon_category" scope="row"><i class="fa-solid fa-cart-shopping"></i></th>
+                      <th class="table_body_name" scope="col"><input id="nameNode" type="text"></th>
+                      <th class="table_body_create" scope="col">Created</th>
+                      <th class="table_body_category" scope="col">
 
-          
-          
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button id="create_node" name="submit"  type="submit" class="btn">Create Note</button>
-          </form>
+                        <select id="category" name="category" class="category">
+                          <option value="task">Task</option>
+                          <option value="random thought">Random Thought</option>
+                          <option value="idea">Idea</option>
+                        </select>
+
+                      </th>
+                      <th class="table_body_content" scope="col"><input name="contentText" id="content_text"
+                          type="text"></th>
+                      <th class="table_body_dates" scope="col">
+                        <p class="dates"></p>
+                      </th>
+                    </tr>
+                  </tbody>
+                </table>
+
+
+
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button id="create_node" name="submit" type="submit" class="btn">Create Note</button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    
-    <div class="modal fade" id="editModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-      aria-labelledby="staticBackdropLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-          <div class="modal-body">
-            <form id="editForm" class="modal-footer">
-              <table class="todoList_table table">
-                <tbody class="table_body">
-                  <tr class="table_body_row">
-                    <th class="table_body_icon_category" scope="row"><i class="fa-solid fa-cart-shopping"></i></th>
-                    <th class="table_body_name" scope="col"><input id="nameNode" type="text" name="nameNode"></th>
-                    <th class="table_body_create" scope="col">Created</th>
-                    <th class="table_body_category" scope="col">
-    
-                      <select id="category" name="category" class="category">
-                        <option value="task">Task</option>
-                        <option value="random thought">Random Thought</option>
-                        <option value="idea">Idea</option>
-                      </select>
-    
-                    </th>
-                    <th class="table_body_content" scope="col"><input name="contentText" id="content_text" type="text"></th>
-                    <th class="table_body_dates" scope="col">
-                      <p class="dates"></p>
-                    </th>
-                  </tr>
-                </tbody>
-              </table>
-    
-    
-    
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button id="create_node" name="submit" type="submit" class="btn">Create Note</button>
-            </form>
+
+      <div class="modal fade" id="editTaskModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+            <div class="modal-body">
+              <form id="editTaskForm" class="modal-footer">
+                <table class="todoList_table table">
+                  <tbody class="table_body">
+                    <tr class="table_body_row">
+                      <th class="table_body_icon_category" scope="row"><i class="fa-solid fa-cart-shopping"></i></th>
+                      <th class="table_body_name" scope="col"><input id="nameNode" type="text" name="nameNode"></th>
+                      <th class="table_body_create" scope="col">Created</th>
+                      <th class="table_body_category" scope="col">
+
+                        <select id="category" name="category" class="category">
+                          <option value="task">Task</option>
+                          <option value="random thought">Random Thought</option>
+                          <option value="idea">Idea</option>
+                        </select>
+
+                      </th>
+                      <th class="table_body_content" scope="col"><input name="contentText" id="content_text"
+                          type="text"></th>
+                      <th class="table_body_dates" scope="col">
+                        <p class="dates"></p>
+                      </th>
+                    </tr>
+                  </tbody>
+                </table>
+
+
+
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button id="create_node" name="submit" type="submit" class="btn">Create Note</button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
-    </div>
     </div>
   </div>
 
   <div class="container">
     <table class="todoList_table_number table">
-      
+
       <thead class="th_number">
         <tr class="th_row_number table-secondary">
           <th></th>
@@ -125,17 +200,35 @@
         </tr>
       </thead>
       <tbody id="table_list_numbers" class="table_body_numbers">
-    
+        <tr class="th_row_number table-secondary">
+          <th></th>
+          <th class="th__number_node" scope="col"><i class="fa-solid fa-cart-shopping"></i></th>
+          <th class="th_active" scope="col"></th>
+          <th class="th_frhived" scope="col"></th>
+        </tr>
+        <tr class="th_row_number table-secondary">
+          <th></th>
+          <th class="th__number_node" scope="col"><i class="fa-solid fa-shuffle"></i></th>
+          <th class="th_active" scope="col"></th>
+          <th class="th_frhived" scope="col"></th>
+        </tr>
+        <tr class="th_row_number table-secondary">
+          <th></th>
+          <th class="th__number_node" scope="col"><i class="fa-regular fa-lightbulb"></i></th>
+          <th class="th_active" scope="col"></th>
+          <th class="th_frhived" scope="col"></th>
+        </tr>
       </tbody>
     </table>
   </div>
-    
+
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+    crossorigin="anonymous"></script>
   <script src="https://kit.fontawesome.com/bd771d497c.js" crossorigin="anonymous"></script>
   <script src="./js/index.js"></script>
   <script src="./js/numberOfNotes.js"></script>
 </body>
-</html>
 
+</html>
